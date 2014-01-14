@@ -1,9 +1,12 @@
+var path = require('path')
+    , geddyPath = path.normalize(path.join(require.resolve('geddy'), '../../'));
+
 var utils = require('utilities')
   , fs = require('fs')
   , path = require('path')
   , genDirname = path.join(__dirname, '..')
-  , Adapter = require('../../lib/template/adapters').Adapter
-  , Migration = require('model').Migration;
+  , Adapter = require('../.').Adapter
+  , Migration = require(path.join(geddyPath, 'node_modules','model')).Migration;
 
 namespace('migration', function () {
 

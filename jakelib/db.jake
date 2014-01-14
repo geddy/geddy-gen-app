@@ -1,12 +1,14 @@
+var path = require('path')
+    , geddyPath = path.normalize(path.join(require.resolve('geddy'), '../../'));
+
 // Load the basic Geddy toolkit
-require('../../lib/geddy')
+require(path.join(geddyPath,'lib/geddy'));
 
 var cwd = process.cwd()
   , fs = require('fs')
-  , path = require('path')
-  , utils = require('../../lib/utils')
-  , modelInit = require('../../lib/init/model')
-  , Adapter = require('../../lib/template/adapters');
+  , utils = require(path.join(geddyPath, 'lib/utils'))
+  , modelInit = require(path.join(geddyPath, 'lib/init/model'))
+  , Adapter = require('../.');
 
 namespace('db', function () {
 

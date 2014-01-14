@@ -19,11 +19,11 @@ namespace('env', function () {
   });
 
   task('controller', ['config'], function () {
-    geddy.controller = require('../../lib/controller');
+    geddy.controller = require('../.');
   });
 
   task('app', ['config'], {async: true}, function () {
-    require('../../lib/init').init(geddy, function () {
+    require('../.').init(geddy, function () {
       complete();
     });
   });
