@@ -1,13 +1,22 @@
 {
   "name": "geddy-gen-app",
   "version": "0.0.1",
-  "description": "",
+  "description": "Experimental app generator for the geddy MVC framework.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "BSD-2-Clause",
+  "author": "Ondrej Brinkel <info@anzui.de> (http://anzui.de)",
+  "contributors": [
+    "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
+  ],
+  "keywords": [
+    "geddy",
+    "Web",
+    "framework",
+    "REST",
+    "MVC"
+  ],
   "dependencies": {
     "utilities": "*",
     "jake": "*"
