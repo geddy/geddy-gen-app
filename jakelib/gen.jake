@@ -130,6 +130,10 @@ var _formatModelProperties = function (properties) {
   return obj;
 };
 
+task('default', function(name, engine, realtime) {
+  jake.Task['create'].invoke(name, engine, realtime);
+});
+
 // Creates a new Geddy app scaffold
 task('create', function(name, engine, realtime) {
   var basePath = path.join(genDirname, 'base')
