@@ -1,0 +1,1 @@
+All modules you place in here automatically get available in all your views as helpers.
