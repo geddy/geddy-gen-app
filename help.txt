@@ -1,0 +1,5 @@
+Geddy MVC app generator.
+
+Usage:
+
+    geddy gen app create[some app name]
