@@ -9,6 +9,9 @@ module.exports = function(appPath, args) {
     console.warn('This syntax is deprecated and will not be supported in future versions.\nThe new syntax is: geddy gen app create[app-name].\n');
     args = ['default[' + args.join(',') + ']'];
   }
+  else if(args.length == 0) {
+    args = ['help'];
+  }
 
   // force to load local Jakefile and jakelib
   args.push('--jakefile');
