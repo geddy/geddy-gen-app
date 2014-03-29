@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - "0.10"
+  - "0.8"
+
+before_script:
+  - rm -R node_modules/jake
+  - rm -R node_modules/utilities
+  - npm install https://github.com/mde/jake/archive/master.tar.gz
+  - npm install https://github.com/mde/utilities/archive/master.tar.gz
+
+script: node_modules/jake/bin/cli.js test --trace
