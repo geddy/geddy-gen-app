@@ -6,7 +6,9 @@ node_js:
 before_script:
   - rm -R node_modules/jake
   - rm -R node_modules/utilities
+  - rm -R -f node_modules/geddy
   - npm install https://github.com/mde/jake/archive/master.tar.gz
   - npm install https://github.com/mde/utilities/archive/master.tar.gz
+  - npm install https://github.com/geddy/geddy/archive/master.tar.gz
 
 script: node_modules/jake/bin/cli.js test --trace
