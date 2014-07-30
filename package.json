@@ -6,6 +6,10 @@
   "scripts": {
     "test": "node_modules/jake/bin/cli.js test --trace"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geddy/geddy-gen-app.git"
+  },
   "author": "Ondrej Brinkel <info@anzui.de> (http://anzui.de)",
   "contributors": [
     "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
