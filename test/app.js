@@ -33,7 +33,7 @@ tests = {
       var tmpAppFiles = jake.readdirR(tmpTestAppDir);
 
       // on some servers hidden files are not copied over, this includes 3 .gitkeep files
-      assert.ok(appFiles.length === tmpAppFiles.length || appFiles.length - 3 === tmpAppFiles.length);
+      assert.ok(appFiles.length === tmpAppFiles.length || appFiles.length === tmpAppFiles.length - 3);
 
       // compare name and contents of each file
       tmpAppFiles.forEach(function(file, i) {
