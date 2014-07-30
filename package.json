@@ -19,6 +19,7 @@
   ],
   "dependencies": {
     "utilities": "*",
-    "jake": "*"
+    "jake": "*",
+    "geddy-genutils": "*"
   }
 }

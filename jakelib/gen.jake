@@ -1,15 +1,13 @@
 var path = require('path')
-    , geddyPath = path.normalize(path.join(require.resolve('geddy'), '../../'));
+  , fs = require('fs')
+  , cwd = process.cwd()
+  , utilities = require('utilities')
+  , genutils = require('geddy-genutils')
+  , genDirname = path.join(__dirname, '..');
 
 // Load the basic Geddy toolkit
-require(path.join(geddyPath,'lib/geddy'));
-
-// Dependencies
-var cwd = process.cwd()
-    , fs = require('fs')
-    , utils = require(path.join(geddyPath, 'lib/utils'))
-    , Adapter = require(path.join(geddyPath, 'lib/template/adapters')).Adapter
-    , genDirname = path.join(__dirname, '..');
+genutils.loadGeddy();
+var utils = genutils.loadGeddyUtils();
 
 task('default', function(name, engine, realtime) {
   jake.Task['create'].invoke(name, engine, realtime);
@@ -55,14 +53,18 @@ task('create', function(name) {
   });
 
   // Compile Jakefile
-  text = fs.readFileSync(path.join(basePath, 'Jakefile.ejs'), 'utf8').toString();
-  adapter = new Adapter({engine: 'ejs', template: text});
-  fs.writeFileSync(path.join(appPath, 'Jakefile'), adapter.render({appName: name}), 'utf8');
+  genutils.template.write(
+    path.join(basePath, 'Jakefile.ejs'),
+    path.join(appPath, 'Jakefile'),
+    {appName: name}
+  );
 
   // Compile package.json
-  text = fs.readFileSync(path.join(basePath, 'package.json.ejs'), 'utf8').toString();
-  adapter = new Adapter({engine: 'ejs', template: text});
-  fs.writeFileSync(path.join(appPath, 'package.json'), adapter.render({appName: name}), 'utf8');
+  genutils.template.write(
+    path.join(basePath, 'package.json.ejs'),
+    path.join(appPath, 'package.json'),
+    {appName: name}
+  );
 
   console.log('Created app ' + name + '.');
 });

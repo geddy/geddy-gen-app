@@ -4,11 +4,13 @@ node_js:
   - "0.8"
 
 before_script:
-  - rm -R -f node_modules/jake
-  - rm -R -f node_modules/utilities
+  - rm -R node_modules/jake
+  - rm -R node_modules/utilities
   - rm -R -f node_modules/geddy
+  - rm -R -f node_modules/geddy-genutils
   - npm install https://github.com/mde/jake/archive/master.tar.gz
   - npm install https://github.com/mde/utilities/archive/master.tar.gz
   - npm install https://github.com/geddy/geddy/archive/master.tar.gz
+  - npm install https://github.com/geddy/geddy-genutils/archive/master.tar.gz
 
 script: node_modules/jake/bin/cli.js test --trace
