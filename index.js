@@ -20,12 +20,4 @@ module.exports = function(appPath, args) {
 
   // run our tasks
   jake.run.apply(jake, args);
-}
-
-// make tasks available programaticly
-validTasks.forEach(function(task) {
-  module.exports[task] = function() {
-    var t = jake.Task.create;
-    t.invoke.apply(t, Array.prototype.slice.call(arguments));
-  }
-});
+};
