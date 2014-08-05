@@ -13,7 +13,8 @@ tests = {
     // go to tmp dir
     process.chdir(path.join(__dirname, 'tmp'));
 
-    exec(path.join(__dirname, 'helpers', 'exec.js') + ' geddy-test-app', onGenDone);
+    var p = exec(path.join(__dirname, 'helpers', 'exec.js') + ' geddy-test-app --bower', onGenDone);
+    p.stdout.pipe(process.stdout);
 
     function onGenDone(err, stdout, stderr)
     {
@@ -50,13 +51,44 @@ tests = {
 
         if (!fileIsDir) {
           // is the content the same
-          assert.strictEqual(
+          assert.equal(
             fs.readFileSync(file, {encoding: 'utf8'}),
             fs.readFileSync(testAppFile, {encoding: 'utf8'})
           );
         }
       });
       next();
+    }
+  },
+  'Update bower setup': function()
+  {
+    process.chdir(tmpTestAppDir);
+
+    var pkgJsonPath = path.join(tmpTestAppDir, 'package.json');
+
+    // update version number
+    fs.writeFileSync(
+      pkgJsonPath,
+      fs.readFileSync(pkgJsonPath, 'utf8').replace('0.0.1', '0.0.2').replace('geddy-test-app', 'geddy-test-app-updated'),
+      { encoding: 'utf8'}
+    );
+
+    var p = exec(path.join(__dirname, 'helpers', 'exec.js') + ' bower', onGenDone);
+    p.stdout.pipe(process.stdout);
+
+    function onGenDone(err, stdout, stderr)
+    {
+      if (err) {
+        console.log(err);
+        fail();
+        return;
+      }
+
+      // validate bower.json
+      assert.equal(
+        fs.readFileSync(path.join(tmpTestAppDir, 'bower.json'), 'utf8'),
+        fs.readFileSync(path.join(__dirname, 'fixtures', 'updated_bower.json'), 'utf8')
+      );
     }
   }
 };

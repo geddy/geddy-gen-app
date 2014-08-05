@@ -3,6 +3,7 @@ var path = require('path')
   , cwd = process.cwd()
   , utilities = require('utilities')
   , genutils = require('geddy-genutils')
+  , helpers = require('./helpers')
   , genDirname = __dirname;
 
 var ns = 'app';
@@ -35,6 +36,8 @@ namespace(ns, function() {
       throw new Error('No app name specified.');
     }
     var appPath = path.join(process.cwd(), name);
+
+    var bower = genutils.flagSet(null, '--bower');
 
     // create app dir
     jake.mkdirP(appPath);
@@ -76,6 +79,51 @@ namespace(ns, function() {
     );
 
     console.log('Created app ' + name + '.');
+
+    if (bower) {
+      process.chdir(appPath);
+      jake.Task['app:bower'].invoke();
+    }
+  });
+
+  desc('Sets up bower for your app.');
+  task('bower', function(deps) {
+    if (!deps) {
+      var deps = {};
+    }
+
+    var numDeps = 0;
+    for(var key in deps) {
+      numDeps++;
+    }
+
+    var appPath = process.cwd();
+    var pkg = require(path.join(appPath, './package.json'));
+    var bowerJsonPath = path.join(appPath, 'bower.json');
+    var bowerrcPath = path.join(appPath, '.bowerrc');
+
+    // create bower.json
+    if (!fs.existsSync(bowerJsonPath)) {
+      genutils.template.write(
+        path.join(__dirname, 'bower', 'bower.json.ejs'),
+        bowerJsonPath,
+        { deps: deps, numDeps: numDeps, pkg: pkg }
+      );
+    }
+    // update existing bower.json
+    else {
+      var bowerJson = fs.readFileSync(bowerJsonPath, 'utf8');
+      fs.writeFileSync(bowerJsonPath, helpers.updateBowerJson(bowerJson, pkg), {encoding: 'utf8'});
+      console.log('[Updated] bower.json');
+    }
+
+    // create .bowerrc
+    if (!fs.existsSync(bowerrcPath)) {
+      jake.cpR(path.join(__dirname, 'bower', '.bowerrc'), bowerrcPath, {silent: true});
+      console.log('[Added] .bowerrc');
+    }
+
+    console.log('Setup bower for your app.');
   });
 
   desc('Clears the test temp directory.');

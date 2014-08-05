@@ -1,7 +1,7 @@
 var jake = require('jake');
 var path = require('path');
 var genutils = require('geddy-genutils');
-var validTasks = ['create','migrate','update','upgradePrevious'];
+var validTasks = ['create', 'bower', 'migrate', 'update', 'upgradePrevious'];
 var ns = 'app';
 
 module.exports = function(appPath, args) {
