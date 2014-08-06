@@ -38,6 +38,7 @@ namespace(ns, function() {
     var appPath = path.join(process.cwd(), name);
 
     var bower = genutils.flagSet(null, '--bower');
+    var views = genutils.flagSet(null, '--views');
 
     // create app dir
     jake.mkdirP(appPath);
@@ -80,14 +81,24 @@ namespace(ns, function() {
 
     console.log('Created app ' + name + '.');
 
+    process.chdir(appPath);
+
     if (bower) {
-      process.chdir(appPath);
       jake.Task['app:bower'].invoke();
+    }
+
+    if (views) {
+      jake.Task['app:views'].invoke();
     }
   });
 
   desc('Sets up bower for your app.');
   task('bower', function(deps) {
+    if (!genutils.inAppRoot()) {
+      fail('You must run this generator from the root of your application.');
+      return;
+    }
+
     if (!deps) {
       var deps = {};
     }
@@ -124,6 +135,64 @@ namespace(ns, function() {
     }
 
     console.log('Setup bower for your app.');
+  });
+
+  desc('Creates the main views for your app.');
+  task('views', function(engine, framework, templatesDir) {
+    if (!genutils.inAppRoot()) {
+      fail('You must run this generator from the root of your application.');
+      return;
+    }
+
+    if (!engine) {
+      var engine = process.env['--engine'] || 'ejs';
+    }
+
+    if (!framework) {
+      var framework = process.env['--framework'] || 'bootstrap/none';
+    }
+
+    // parse the framework
+    framework = framework.split('/', 2);
+    framework = {
+      css: framework[0],
+      js: framework[1]
+    };
+
+    if (!templatesDir) {
+      var templatesDir = path.join(__dirname, 'views');
+    }
+
+    var bower = genutils.flagSet(null, '--bower');
+    var ext = genutils.template.getExtFromEngine(engine);
+
+    var viewData = {
+      engine: engine,
+      framework: framework
+    };
+
+    // create views
+    genutils.jake.loadFiles(genutils.getGenDir('geddy-gen-view'));
+    var viewTask = jake.Task['view:create'];
+
+    var files = new jake.FileList();
+    files.include(templatesDir + '/**/*.html.ejs');
+
+    files.toArray().forEach(function(file) {
+      var relFile = path.relative(templatesDir, file);
+      viewTask.reenable();
+      viewTask.invoke(
+        path.join(path.dirname(relFile), path.basename(relFile, path.extname(file)) + ext),
+        file,
+        viewData,
+        transformTemplate
+      );
+    });
+
+    function transformTemplate(content)
+    {
+      return content.replace(/\<\@/g, '<%').replace(/\@\>/g, '%>');
+    }
   });
 
   desc('Clears the test temp directory.');

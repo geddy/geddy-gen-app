@@ -3,12 +3,17 @@ Geddy MVC app generator.
 Usage:
 
     # Create a new app
-    geddy gen app create[some app name] --bower
+    geddy gen app create[some app name] --bower --views
 
     # Setup bower for an existing app or update bower setup from package.json
     geddy gen app bower
 
+    # Create main views for your app
+    geddy gen app views --bower
+
 
 Options:
 
-    --bower   If set, the app will be initialized with a bower (http://bower.io) setup
+    --bower       (optional) If set, the app will be initialized with a bower (http://bower.io) setup
+                  and eventual bower dependencies will be automaticly installed
+    --views       (optional) If set, the main app views will be created.

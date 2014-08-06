@@ -60,7 +60,7 @@ tests = {
       next();
     }
   },
-  'Update bower setup': function()
+  'Update bower setup': function(next)
   {
     process.chdir(tmpTestAppDir);
 
@@ -89,6 +89,27 @@ tests = {
         fs.readFileSync(path.join(tmpTestAppDir, 'bower.json'), 'utf8'),
         fs.readFileSync(path.join(__dirname, 'fixtures', 'updated_bower.json'), 'utf8')
       );
+
+      next();
+    }
+  },
+  'Create main views': function(next)
+  {
+    process.chdir(tmpTestAppDir);
+
+    var p = exec(path.join(__dirname, 'helpers', 'exec.js') + ' views', onGenDone);
+    p.stdout.pipe(process.stdout);
+
+    function onGenDone(err, stdout, stderr)
+    {
+      if (err) {
+        console.error(err);
+        fail();
+        return;
+      }
+
+      // TODO: compare with fixtures
+      next();
     }
   }
 };
