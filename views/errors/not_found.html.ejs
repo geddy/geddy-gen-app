@@ -1,5 +1,62 @@
-<h2>Error: <@= statusCode @> <@= statusText @></h2>
-<@ if (message) { @>
-<div><@= message; @></div>
-<@ } @>
+<%
+var attrs, jadeAttrs;
 
+switch(framework.css) {
+  case 'bootstrap':
+    attrs = ' class="alert alert-warningr" role="alert"';
+    jadeAttrs = '.alert.alert-warning(role="alert")';
+    break;
+  case 'foundation':
+    attrs = ' class="alert-box warning" data-alert';
+    jadeAttrs = '.alert-box.warning(data-alert)';
+    break;
+  default:
+    attrs = ' class="alert" role="alert"';
+    jadeAttrs = '.alert(role="alert")';
+}
+
+switch(engine) {
+case 'ejs': %>
+
+<div<%- attrs %>>
+  <h2>Error: <@= statusCode @> <@= statusText @></h2>
+  <@ if (message) { @>
+  <div><@= message; @></div>
+  <@ } @>
+</div>
+
+<% break; case 'handlebars': %>
+
+<div<%- attrs %>>
+  <h2>Error: {{ statusCode }} {{ statusText }}</h2>
+  {{#if message}}
+  <div>{{ message }}</div>
+  {{/if}}
+</div>
+
+<% break; case 'jade': %>
+
+<%- jadeAttrs %>
+  h2 Error: #{statusCode} #{statusText}
+  if message
+    div= message
+
+<% break; case 'mustache': %>
+
+<div<%- attrs %>>
+  <h2>Error: {{ statusCode }} {{ statusText }}</h2>
+  {{#if message}}
+  <div>{{ message }}</div>
+  {{/if}}
+</div>
+
+<% break; case 'swig': %>
+
+<div<%- attrs %>>
+  <h2>Error: {{ statusCode }} {{ statusText }}</h2>
+  {% if message %}
+  <div>{{ message }}</div>
+  {% endif %}
+</div>
+
+<% break; } %>

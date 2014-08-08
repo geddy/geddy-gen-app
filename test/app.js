@@ -7,6 +7,36 @@ var path = require('path')
 var testAppDir = path.join(__dirname, 'geddy-test-app');
 var tmpTestAppDir = path.join(__dirname, 'tmp', 'geddy-test-app');
 
+function clearViews()
+{
+  var viewsPath = path.join(tmpTestAppDir, 'app', 'views');
+  jake.rmRf(viewsPath, {silent: true});
+  jake.mkdirP(viewsPath, {silent: true});
+}
+
+function createViews()
+{
+  var args = Array.prototype.slice.call(arguments);
+  var next = args.shift();
+
+  process.chdir(tmpTestAppDir);
+
+  var p = exec(path.join(__dirname, 'helpers', 'exec.js') + ' views ' + args.join(' '), onGenDone);
+  p.stdout.pipe(process.stdout);
+
+  function onGenDone(err, stdout, stderr)
+  {
+    if (err) {
+      console.error(err);
+      fail();
+      return;
+    }
+
+    // TODO: compare with fixtures
+    next();
+  }
+}
+
 tests = {
   'Create test app': function(next)
   {
@@ -93,25 +123,29 @@ tests = {
       next();
     }
   },
-  'Create main views': function(next)
+  'Create main views without any engine and framework specified --bower': function(next)
   {
-    process.chdir(tmpTestAppDir);
-
-    var p = exec(path.join(__dirname, 'helpers', 'exec.js') + ' views', onGenDone);
-    p.stdout.pipe(process.stdout);
-
-    function onGenDone(err, stdout, stderr)
-    {
-      if (err) {
-        console.error(err);
-        fail();
-        return;
-      }
-
-      // TODO: compare with fixtures
-      next();
-    }
+    clearViews();
+    createViews(next, '--bower');
+  },
+  'Create main views with foundation --bower': function(next)
+  {
+    clearViews();
+    createViews(next, 'framework=foundation', '--bower');
   }
 };
+
+var engines = ['ejs', 'handlebars', 'mustache', 'jade', 'swig'];
+var frameworks = ['bootstrap', 'foundation', 'none'];
+
+engines.forEach(function(engine) {
+  frameworks.forEach(function(framework) {
+    tests['Create main views in ' + engine + ' and ' + framework] = function(next)
+    {
+      clearViews();
+      createViews(next, 'engine=' + engine, 'framework=' + framework);
+    }
+  });
+});
 
 module.exports = tests;

@@ -1,26 +1,59 @@
-<@= partial('layout_header'); @>
+<%
+var attrs, jadeAttrs;
+
+switch(framework.css) {
+  case 'bootstrap':
+    attrs = ' class="container" role="main"';
+    jadeAttrs = 'section.container(role="main")';
+    break;
+  case 'foundation':
+    attrs = ' class="row" role="main"';
+    jadeAttrs = 'section.row(role="main")';
+    break;
+  default:
+    attrs = ' role="main"';
+    jadeAttrs = 'section(role="main")';
+}
+%>
+<%- genutils.template.partial('layout_header', engine); %>
+  <% if (engine !== 'jade') { %>
   <body>
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="i-bar"><i class="icon-chevron-down icon-white"></i></span>
-          </a>
-          <@- linkTo('Geddy App', mainsPath, {class: 'brand'}) @>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li class="active"><@- linkTo('Home', mainsPath) @></li>
-              <li><@- linkTo('Tutorial', 'http://geddyjs.org/tutorial') @></li>
-              <li><@- linkTo('Docs', 'http://geddyjs.org/documentation') @></li>
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <@- displayFlash(flash); @>
-      <@- render(); @>
-    </div>
+  <% } else { %>
+  body
+  <% } %>
+    <%- genutils.template.partial('../navs/nav_main', engine); %>
+    <% if (engine !== 'jade') { %>
+    <section<%- attrs %>>
+      <%- genutils.template.unescaped('displayFlash(flash)', engine); %>
+      <%- genutils.template.unescaped('render()', engine); %>
+    </section>
+    <% } else { %>
+    <%- jadeAttrs %>
+      <%- genutils.template.unescaped('displayFlash(flash)', engine); %>
+      <%- genutils.template.unescaped('render()', engine); %>
+    <% } %>
+
+    <!-- scripts -->
+    <%- genutils.template.script('bower_components/jquery/jquery.min.js', engine) %>
+
+    <% switch(framework.css) {
+    case 'bootstrap': %>
+    <%- genutils.template.script('bower_components/bootstrap/dist/js/bootstrap.min.js', engine) %>
+    <% break; case 'foundation': %>
+    <%- genutils.template.script('bower_components/foundation/js/foundation.min.js', engine) %>
+    <% if (engine !== 'jade') { %>
+    <script>
+      $(document).foundation();
+    </script>
+    <% } else { %>
+    script
+      $(document).foundation();
+    <% } %>
+    <% break; } %>
+
+    <%- genutils.template.script('js/config/init.js', engine) %>
+  <% if (engine !== 'jade') { %>
   </body>
-<@= partial('layout_footer'); @>
+  <% } %>
+<%- genutils.template.partial('layout_footer', engine); %>
 

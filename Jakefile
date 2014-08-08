@@ -138,37 +138,39 @@ namespace(ns, function() {
   });
 
   desc('Creates the main views for your app.');
-  task('views', function(engine, framework, templatesDir) {
+  task('views', {async: true}, function(engine, framework, templatesDir) {
     if (!genutils.inAppRoot()) {
       fail('You must run this generator from the root of your application.');
       return;
     }
 
     if (!engine) {
-      var engine = process.env['--engine'] || 'ejs';
+      var engine = process.env['engine'] || 'ejs';
     }
 
     if (!framework) {
-      var framework = process.env['--framework'] || 'bootstrap/none';
+      var framework = process.env['framework'] || 'bootstrap/none';
     }
 
     // parse the framework
     framework = framework.split('/', 2);
     framework = {
       css: framework[0],
-      js: framework[1]
+      js: (framework.length == 2) ? framework[1] : 'none'
     };
 
     if (!templatesDir) {
-      var templatesDir = path.join(__dirname, 'views');
+      var templatesDir = process.env['templates'] || path.join(__dirname, 'views');
     }
 
     var bower = genutils.flagSet(null, '--bower');
     var ext = genutils.template.getExtFromEngine(engine);
+    var appPath = process.cwd();
 
     var viewData = {
       engine: engine,
-      framework: framework
+      framework: framework,
+      genutils: genutils
     };
 
     // create views
@@ -189,9 +191,57 @@ namespace(ns, function() {
       );
     });
 
+    // copy templates from the public/ folder
+    var publicDir = path.join(__dirname, 'public');
+    files = new jake.FileList();
+    files.include(publicDir + '/**/*.*');
+
+    files.toArray().forEach(function(file) {
+      var relFile = path.relative(publicDir, file);
+      var ext = path.extname(file);
+      var dest;
+
+      // render templates
+      if (ext === '.ejs') {
+        dest = path.join(appPath, 'public', path.dirname(relFile), path.basename(relFile, ext));
+        jake.mkdirP(path.dirname(dest));
+        genutils.template.write(
+          file, dest,
+          viewData,
+          transformTemplate
+        );
+      }
+      // but copy regular files
+      else {
+        dest = path.join(appPath, 'public', relFile);
+        jake.mkdirP(path.dirname(dest));
+        jake.cpR(file, dest, {silent: true});
+      }
+    });
+
+    // install bower components based on frameworks
+    if (bower) {
+      console.log('installing bower components now ...');
+      var deps = ['jquery'];
+      if (['bootstrap', 'foundation'].indexOf(framework.css) !== -1) {
+        deps.push(framework.css);
+      }
+
+      genutils.bower.install(deps, onBowerInstalled)
+    }
+
     function transformTemplate(content)
     {
-      return content.replace(/\<\@/g, '<%').replace(/\@\>/g, '%>');
+      return content.replace(/\<\@/g, '<%').replace(/\@\>/g, '%>').trim();
+    }
+
+    function onBowerInstalled(err)
+    {
+      if (err) {
+        console.error(err);
+      }
+
+      complete();
     }
   });
 

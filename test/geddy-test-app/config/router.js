@@ -37,4 +37,6 @@ var router = new geddy.RegExpRouter();
 //   this.get('/print(.:format)').to('Hemispheres.print');
 // });
 
+router.get('/').to('Main.index');
+
 exports.router = router;

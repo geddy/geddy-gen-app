@@ -1,6 +1,36 @@
+<%
+var attrs, jadeAttrs, btnClass;
+
+switch(framework.css) {
+  case 'bootstrap':
+    attrs = ' class="jumbotron"';
+    jadeAttrs = '.jumbotron';
+    btnClass = 'btn btn-primary';
+    break;
+  case 'foundation':
+    attrs = ' class="panel"';
+    jadeAttrs = '.panel';
+    btnClass = 'button';
+    break;
+  default:
+    attrs = ' class="welcome-box"';
+    jadeAttrs = '.welcome-box';
+    btnClass = 'button';
+}
+%>
 <!-- Lets talk about geddy -->
-<div class="hero-unit geddy-welcome-box">
+<% if (engine !== 'jade') { %>
+<div<%- attrs %>>
   <h1>Hello, World!</h1>
   <p>You've created a Geddy app and your server is running. If you already know what you're doing, feel free to jump into your app logic, if not...</p>
-  <p><@- linkTo('Lets get you started »', 'http://geddyjs.org/tutorial.html', {class: 'btn btn-primary btn-large'}) @></p>
+  <p><%- genutils.template.unescaped("linkTo('Lets get you started »', 'http://geddyjs.org/tutorial.html', {class: '" + btnClass + "'})", engine); %></p>
 </div>
+<% } else { %>
+<%- jadeAttrs %>
+  h1
+    Hello, World!
+  p
+    You've created a Geddy app and your server is running. If you already know what you're doing, feel free to jump into your app logic, if not...
+  p
+    <%- genutils.template.unescaped("linkTo('Lets get you started »', 'http://geddyjs.org/tutorial.html', {class: " + btnClass + "})", engine); %>
+<% } %>

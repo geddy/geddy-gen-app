@@ -1,0 +1,127 @@
+<% if (engine !== 'jade') { %>
+    <% switch(framework.css) {
+    case 'bootstrap': %>
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav-main-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <%- genutils.template.unescaped("linkTo('Geddy App', mainsPath, {class: 'navbar-brand'})", engine); %>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="nav-main-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><%- genutils.template.unescaped("linkTo('Home', mainsPath)", engine); %></li>
+            <li><%- genutils.template.unescaped("linkTo('Tutorial', 'http://geddyjs.org/tutorial')", engine); %></li>
+            <li><%- genutils.template.unescaped("linkTo('Docs', 'http://geddyjs.org/documentation')", engine); %></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <% break; case 'foundation': %>
+
+    <nav class="top-bar" data-topbar>
+      <ul class="title-area">
+        <li class="name"><h1><%- genutils.template.unescaped("linkTo('Geddy App', mainsPath)", engine); %></h1></li>
+        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+      <section class="top-bar-section"> <!-- Right Nav Section -->
+        <ul class="right">
+          <li><%- genutils.template.unescaped("linkTo('Tutorial', 'http://geddyjs.org/tutorial')", engine); %></li>
+          <li><%- genutils.template.unescaped("linkTo('Docs', 'http://geddyjs.org/documentation')", engine); %></li>
+        </ul>
+        <!-- Left Nav Section -->
+        <ul class="left">
+          <li class="active"><%- genutils.template.unescaped("linkTo('Home', mainsPath)", engine); %></li>
+        </ul>
+      </section>
+    </nav>
+
+    <% break; default: %>
+
+    <nav class="nav-main" role="navigation">
+      <ul class="nav-main-list">
+        <li class="nav-main-brand"><%- genutils.template.unescaped("linkTo('Geddy App', mainsPath)", engine); %></li>
+        <li class="active"><%- genutils.template.unescaped("linkTo('Home', mainsPath)", engine); %></li>
+        <li><%- genutils.template.unescaped("linkTo('Tutorial', 'http://geddyjs.org/tutorial')", engine); %></li>
+        <li><%- genutils.template.unescaped("linkTo('Docs', 'http://geddyjs.org/documentation')", engine); %></li>
+      </ul>
+    </nav>
+
+    <% } %>
+<% } else { %>
+    <% switch(framework.css) {
+    case 'bootstrap': %>
+
+    nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
+      .container-fluid
+        <!-- Brand and toggle get grouped for better mobile display -->
+        .navbar-header
+          button.navbar-toggle(type="button" data-toggle="collapse" data-target="#nav-main-collapse")
+            span.sr-only: Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+
+          <%- genutils.template.unescaped("linkTo('Geddy App', mainsPath, {class: 'navbar-brand'})", engine); %>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        .collapse.navbar-collapse#nav-main-collapse
+          ul.nav.navbar-nav
+            li.active
+              <%- genutils.template.unescaped("linkTo('Home', mainsPath)", engine); %>
+            li
+              <%- genutils.template.unescaped("linkTo('Tutorial', 'http://geddyjs.org/tutorial')", engine); %>
+            li
+              <%- genutils.template.unescaped("linkTo('Docs', 'http://geddyjs.org/documentation')", engine); %>
+
+    <% break; case 'foundation': %>
+
+    nav.top-bar(data-topbar)
+      ul.title-area
+        li.name
+          h1
+            <%- genutils.template.unescaped("linkTo('Geddy App', mainsPath)", engine); %>
+
+        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+        li.toggle-topbar.menu-icon
+          a(href="#")
+            span: Menu
+
+      <!-- Right Nav Section -->
+      section.top-bar-section
+        ul.right
+          li
+            <%- genutils.template.unescaped("linkTo('Tutorial', 'http://geddyjs.org/tutorial')", engine); %>
+          li
+            <%- genutils.template.unescaped("linkTo('Docs', 'http://geddyjs.org/documentation')", engine); %>
+
+        <!-- Left Nav Section -->
+        ul.left
+          li.active
+            <%- genutils.template.unescaped("linkTo('Home', mainsPath)", engine); %>
+
+    <% break; default: %>
+
+    nav.nav-main(role="navigation")
+      ul.nav-main-list
+        li.nav-main-brand
+          <%- genutils.template.unescaped("linkTo('Geddy App', mainsPath)", engine); %>
+        li.active
+          <%- genutils.template.unescaped("linkTo('Home', mainsPath)", engine); %>
+        li
+          <%- genutils.template.unescaped("linkTo('Tutorial', 'http://geddyjs.org/tutorial')", engine); %>
+        li
+          <%- genutils.template.unescaped("linkTo('Docs', 'http://geddyjs.org/documentation')", engine); %>
+
+    <% } %>
+<% } %>

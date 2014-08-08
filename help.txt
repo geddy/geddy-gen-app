@@ -9,11 +9,29 @@ Usage:
     geddy gen app bower
 
     # Create main views for your app
-    geddy gen app views --bower
+    geddy gen app views --bower engine=... framework=... templates=...
 
 
 Options:
 
-    --bower       (optional) If set, the app will be initialized with a bower (http://bower.io) setup
-                  and eventual bower dependencies will be automaticly installed
-    --views       (optional) If set, the main app views will be created.
+    --bower               (optional) If set, the app will be initialized with a bower (http://bower.io) setup
+                          and eventual bower dependencies will be automaticly installed
+    --views               (optional) If set, the main app views will be created.
+    engine=value          Name of the template engine to use (see below for supported engines)
+    framework=css/js      (optional) CSS and JS framework to use.
+                          Separate the frameworks by a "/", the CSS framework beeing the first. e.g. "bootstrap/angular"
+                          See below for a list of supported frameworks.
+    templates=value       (optional) Override path to the templates directory.
+                          The directory must contain add.html.ejs, index.html.ejs, edit.html.ejs, remove.html.ejs and view.html.ejs
+    -p --public           (optional) if set the view will be created in the public/views, instead of the app/views folder
+
+Supported Frameworks:
+
+  CSS: bootstrap, foundation, none
+  JS: angular, rivets, none
+
+Supported Engines:
+
+  ejs, handlebars, jade, mustache, swig, none
+
+  Use "none" only for client side (public) scaffolds

@@ -1,7 +1,63 @@
-<h2>Error: <@= statusCode @> <@= statusText @></h2>
-<@ if (stack) { @>
-<code><@= stack @></code>
-<@ } else if (typeof message != 'undefined') { @>
-<code><@= message @></code>
-<@ } @>
+<%
+var attrs, jadeAttrs;
 
+switch(framework.css) {
+  case 'bootstrap':
+    attrs = ' class="alert alert-danger" role="alert"';
+    jadeAttrs = '.alert.alert-danger(role="alert")';
+    break;
+  case 'foundation':
+    attrs = ' class="alert-box alert" data-alert';
+    jadeAttrs = '.alert-box.alert(data-alert)';
+    break;
+  default:
+    attrs = ' class="alert" role="alert"';
+    jadeAttrs = '.alert(role="alert")';
+}
+
+switch(engine) {
+case 'ejs': %>
+<div<%- attrs %>>
+  <h2>Error: <@= statusCode @> <@= statusText @></h2>
+  <@ if (stack) { @>
+  <code><@= stack @></code>
+  <@ } else if (typeof message != 'undefined') { @>
+  <code><@= message @></code>
+  <@ } @>
+</div>
+
+<% break; case 'handlebars': %>
+
+<div<%- attrs %>>
+  <h2>Error: {{ statusCode }} {{ statusText }}</h2>
+  {{#if stack}}
+  <code>{{ stack }}</code>
+  {{/if}}
+</div>
+
+<% break; case 'jade': %>
+
+<%- jadeAttrs %>
+  h2 Error: #{statusCode} #{statusText}
+  if stack
+    code= stack
+
+<% break; case 'mustache': %>
+
+<div<%- attrs %>>
+  <h2>Error: {{ statusCode }} {{ statusText }}</h2>
+  {{#if stack}}
+  <code>{{ stack }}</code>
+  {{/if}}
+</div>
+
+<% break; case 'swig': %>
+
+<div<%- attrs %>>
+  <h2>Error: {{ statusCode }} {{ statusText }}</h2>
+  {% if stack %}
+  <code>{{ stack }}</code>
+  {% endif %}
+</div>
+
+<% break; } %>

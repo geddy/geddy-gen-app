@@ -1,8 +1,31 @@
-<@= partial('layout_header'); @>
+<%
+var attrs, jadeAttrs;
+
+switch(framework.css) {
+  case 'bootstrap':
+    attrs = ' class="container" role="main"';
+    jadeAttrs = 'section.container(role="main")';
+    break;
+  case 'foundation':
+    attrs = ' class="row" role="main"';
+    jadeAttrs = 'section.row(role="main")';
+    break;
+  default:
+    attrs = ' role="main"';
+    jadeAttrs = 'section(role="main")';
+}
+%>
+<%- genutils.template.partial('layout_header', engine); %>
+<% if (engine !== 'jade') { %>
   <body>
-    <div class="container">
-      <@- render(); @>
-    </div>
+    <section<%- attrs %>>
+      <%- genutils.template.unescaped('render()', engine); %>
+    </section>
   </body>
-<@= partial('layout_footer'); @>
+<% } else { %>
+  body
+    <%- jadeAttrs %>
+      != render()
+<% } %>
+<%- genutils.template.partial('layout_footer'); %>
 

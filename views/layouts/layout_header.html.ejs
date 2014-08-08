@@ -1,3 +1,4 @@
+<% if (engine !== 'jade') { %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -5,19 +6,37 @@
     <title>Geddy App | This app uses Geddy.js</title>
     <meta name="description" content="">
     <meta name="author" content="">
-    <meta name="viewport" content="width=device-width" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<% } else { %>
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    title Geddy App | This app uses Geddy.js
+    meta(name="description", content="")
+    meta(name="author", content="")
+    meta(name="viewport", content="width=device-width")
+<% } %>
     <!-- The HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
-      <@- scriptLink('http://html5shim.googlecode.com/svn/trunk/html5.js', {type:'text/javascript'}) @>
+      <%- genutils.template.script('http://html5shim.googlecode.com/svn/trunk/html5.js', engine) %>
     <![endif]-->
 
-    <@- scriptLink('jquery.min.js', {type:'text/javascript'}) @>
-    <@- scriptLink('bootstrap.min.js', {type:'text/javascript'}) @>
-    <@- scriptLink('config/init.js', {type: 'text/javascript'}) @>
+    <% switch(framework.css) {
+    case 'bootstrap': %>
 
-    <@- styleLink('bootstrap.min.css', {rel:'stylesheet'}) @>
-    <@- styleLink('bootstrap.responsive.min.css', {rel:'stylesheet'}) @>
-    <@- styleLink('style.css', {rel:'stylesheet'}) @>
+    <%- genutils.template.stylesheet('bower_components/bootstrap/dist/css/bootstrap.min.css', engine) %>
+
+    <% break; case 'foundation': %>
+
+    <%- genutils.template.script('bower_components/foundation/js/vendor/modernizr.js', engine) %>
+    <%- genutils.template.stylesheet('bower_components/foundation/css/normalize.css', engine) %>
+    <%- genutils.template.stylesheet('bower_components/foundation/css/foundation.css', engine) %>
+
+    <% break; } %>
+
+    <%- genutils.template.stylesheet('css/style.css', engine) %>
+  <% if (engine !== 'jade') { %>
   </head>
+  <% } %>
 

@@ -14,14 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
-*/
+ */
 
 var Main = function () {
   this.index = function (req, resp, params) {
-    this.respond({params: params});
+    this.respond({params: params}, {
+      format: 'html',
+      template: 'app/views/main/index'
+    });
   };
 };
 
 exports.Main = Main;
-
-
